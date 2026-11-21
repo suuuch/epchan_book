@@ -1,0 +1,6 @@
+numpy>=1.24
+scipy>=1.10
+xlrd>=2.0
+
+# optional, only needed to draw the figures of examples 3.6, 3.4c, 7.2, ...
+# matplotlib>=3.6
