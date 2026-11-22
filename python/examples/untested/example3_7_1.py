@@ -1,4 +1,5 @@
 """Port of ``untested/example3_7_1.m``: build a price matrix from an export.
+``untested/example3_7_1.m`` 的 Python 移植：由导出文件构建价格矩阵。
 
 The MATLAB original reads a *long* format export whose columns are
 
@@ -7,6 +8,14 @@ The MATLAB original reads a *long* format export whose columns are
 (``textread(inputFile, '%s %u %f %f %f %f %u', 'delimiter', ',')``) and pivots
 it into the ``tday``/``stocks``/``op``/``hi``/``lo``/``cl``/``vol`` matrices
 that ``example3_7`` loads.
+
+MATLAB 原始版本读取 *长* 格式的导出文件，其各列为
+
+    symbol, date, open, high, low, close, volume
+
+（``textread(inputFile, '%s %u %f %f %f %f %u', 'delimiter', ',')``），并将其
+透视为 ``example3_7`` 会载入的 ``tday``/``stocks``/``op``/``hi``/``lo``/``cl``/
+``vol`` 矩阵。
 
 .. note::
 
@@ -17,6 +26,11 @@ that ``example3_7`` loads.
    ``NaN``.  The output is written next to the original ``.mat`` file under
    the name ``SPX_20071123_py.mat`` so the book's data file is never
    overwritten.
+
+   本仓库自带的 ``Export.txt`` 是 *宽* 格式（先是 ``Date``，然后每个符号一列），
+   与 ``SPX_20071123.txt`` 完全一样。当检测到宽格式文件时只能还原价格列，因此
+   ``op``、``hi``、``lo`` 和 ``vol`` 都会被填成 ``NaN``。输出写在原始 ``.mat``
+   文件旁边，文件名为 ``SPX_20071123_py.mat``，以免覆盖书中的数据文件。
 """
 
 import sys
@@ -35,7 +49,9 @@ OUTPUT_FILE = data_path("SPX_20071123_py.mat")
 
 
 def _read_long(path):
-    """Read the long format the MATLAB original expects."""
+    """Read the long format the MATLAB original expects.
+    读取 MATLAB 原始版本所期望的长格式文件。
+    """
     mysym, mytday, myop, myhi, mylo, mycl, myvol = [], [], [], [], [], [], []
     with open(path, encoding="latin-1") as handle:
         for line in handle:
@@ -54,7 +70,9 @@ def _read_long(path):
 
 
 def _read_wide(path):
-    """Read the wide format that ships with the repository."""
+    """Read the wide format that ships with the repository.
+    读取本仓库自带的宽格式文件。
+    """
     with open(path, encoding="latin-1") as handle:
         header = handle.readline().rstrip("\n").split("\t")
         rows = [line.rstrip("\n").split("\t") for line in handle if line.strip()]
@@ -66,6 +84,9 @@ def _read_wide(path):
 
 
 def main():
+    """Pivot the export file into the price matrices used by ``example3_7``.
+    把导出文件透视为 ``example3_7`` 所用的价格矩阵。
+    """
     input_file = INPUT_FILE
     with open(input_file, encoding="latin-1") as handle:
         header = handle.readline().rstrip("\n").split("\t")
@@ -78,9 +99,11 @@ def main():
 
         # Since the single file consists of many symbols, we need to find the
         # unique set of symbols.
+        # 由于单个文件包含许多符号，我们需要找出唯一的符号集合。
         stocks = np.unique(mysym)
         # Since the single file consists of many repeating sets of dates for
         # different symbols, we need to find the unique set of dates.
+        # 由于单个文件对不同符号包含许多重复的日期集合，我们需要找出唯一的日期集合。
         tday = np.unique(mytday)
 
         op = np.full((len(tday), len(stocks)), np.nan)
@@ -91,9 +114,14 @@ def main():
 
         for s, stk in enumerate(stocks):
             # find the locations (indices) of the data with the current symbol.
+            # 查找当前符号对应数据的位置（索引）。
             idx_a = np.flatnonzero(mysym == stk)
             # find the locations of the current set of dates.
+            # 查找当前日期集合对应的位置（索引）。
             _common, idxt_a, idxt_b = intersect(mytday[idx_a], tday)
+            # Extract the set of prices for the current symbol
+            # from the downloaded data.
+            # 从下载的数据中提取当前符号对应的价格集合。
             op[idxt_b, s] = myop[idx_a[idxt_a]]
             hi[idxt_b, s] = myhi[idx_a[idxt_a]]
             lo[idxt_b, s] = mylo[idx_a[idxt_a]]

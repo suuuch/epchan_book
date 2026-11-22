@@ -1,4 +1,14 @@
-"""Port of the MATLAB ``smartsum.m`` written by Ernest Chan."""
+"""Port of the MATLAB ``smartsum.m`` written by Ernest Chan.
+
+PURPOSE: y = smartsum(x, dim) -- sum along dimension dim, ignoring NaN.
+         Written by Ernest Chan, author of "Quantitative Trading: How to
+         Start Your Own Algorithmic Trading Business"
+         (ernest@epchan.com, www.epchan.com).
+用途: y = smartsum(x, dim) -- 沿 dim 维求和，忽略 NaN。
+      编写者：Ernest Chan
+      著有“Quantitative Trading: How to Start Your Own Algorithmic Trading
+      Business”一书（ernest@epchan.com，www.epchan.com）。
+"""
 
 import numpy as np
 
@@ -9,6 +19,10 @@ def smartsum(x, axis=None):
     """Sum along ``axis``, ignoring NaN and Inf.
 
     Slices that contain no finite value at all become ``NaN``.
+
+    沿 ``axis`` 维求和，忽略 NaN 和 Inf。
+
+    完全不含有限值的切片会变成 ``NaN``。
     """
     x = np.asarray(x, dtype=float)
     if axis is None:

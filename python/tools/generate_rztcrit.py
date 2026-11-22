@@ -7,6 +7,14 @@ script parses the MATLAB source and writes the tables out as numpy arrays.
 Usage::
 
     python python/tools/generate_rztcrit.py
+
+MATLAB 的 ``rztcrit.m`` 内嵌了五张很大的临界值表（每张表对应一个样本量区间）。
+与其手工誊写 1050 个数字，不如用本脚本解析 MATLAB 源码，并把表格输出成 numpy
+数组。
+
+用法::
+
+    python python/tools/generate_rztcrit.py
 """
 
 import re
@@ -21,6 +29,7 @@ OUTPUT_FILE = Path(__file__).resolve().parents[1] / "epchan" / "_rztcrit_tables.
 
 # The order of the tables inside rztcrit.m, with the sample size bracket each
 # one applies to.
+# rztcrit.m 中各张表的先后顺序，以及每张表所适用的样本量区间。
 BRACKETS = [
     ("nobs >= 500", (500, None)),
     ("400 <= nobs <= 499", (400, 499)),
@@ -31,7 +40,9 @@ BRACKETS = [
 
 
 def parse_tables(source):
-    """Return the five ``(35 x 6)`` tables found in ``rztcrit.m``."""
+    """Return the five ``(35 x 6)`` tables found in ``rztcrit.m``.
+    返回 ``rztcrit.m`` 中的五张 ``(35 x 6)`` 表格。
+    """
     blocks = re.findall(r"zt\s*=\s*\[(.*?)\]", source, re.S)
     if len(blocks) != 5:
         raise SystemExit("expected 5 tables in rztcrit.m, found %d" % len(blocks))
@@ -46,9 +57,14 @@ def parse_tables(source):
 
 
 def main():
+    """Write the parsed tables out as a Python module.
+    把解析出来的表格写成一个 Python 模块。
+    """
     source = MATLAB_FILE.read_text(encoding="latin-1")
     tables = parse_tables(source)
 
+    # The generated module is a plain list of numpy arrays.
+    # 生成出来的模块就是一个由 numpy 数组组成的列表。
     lines = [
         '"""Critical value tables of the augmented Dickey-Fuller test.',
         "",

@@ -2,20 +2,67 @@
 
     "Quantitative Trading: How to Build Your Own Algorithmic Trading Business"
 
+Python 移植版本，源自 Ernest P. Chan 的著作
+
+    《Quantitative Trading: How to Build Your Own Algorithmic Trading Business》
+
 Every function in this package has a 1:1 counterpart in the original MATLAB
 code (the ``.m`` files that live in the root of the repository).  The module
 names are the snake_case version of the MATLAB file names, e.g. the MATLAB
 ``calculateMaxDD.m`` becomes :mod:`epchan.calculate_maxdd`.
 
+本包中的每个函数在原始 MATLAB 代码（仓库根目录下的 ``.m`` 文件）中都有
+一一对应的实现。模块名是 MATLAB 文件名的 snake_case 写法，例如 MATLAB 的
+``calculateMaxDD.m`` 变为 :mod:`epchan.calculate_maxdd`。
+
 Conventions used throughout the package
 ---------------------------------------
 
+全包通用的约定
+--------------
+
 * MATLAB is 1-based, Python is 0-based.  All *index* arithmetic has been
   translated, so the returned values are identical to the MATLAB originals.
+  MATLAB 从 1 开始编号，Python 从 0 开始编号。所有*下标*运算都已相应转换，
+  因此返回值与 MATLAB 原版完全一致。
 * MATLAB's ``dim`` argument is exposed as a **0-based** numpy ``axis``
   argument.  MATLAB ``dim=1`` (down the rows) is Python ``axis=0``.
+  MATLAB 的 ``dim`` 参数以**从 0 开始**的 numpy ``axis`` 参数呈现。
+  MATLAB 的 ``dim=1``（沿行方向）对应 Python 的 ``axis=0``。
 * MATLAB structures are replaced by small dataclasses with the very same
   field names (``results.beta``, ``results.adf``, ...).
+  MATLAB 的结构体被替换为字段名完全相同的小型 dataclass
+  （``results.beta``、``results.adf`` 等）。
+
+Exported helpers
+----------------
+
+导出的辅助函数
+--------------
+
+* **Data and matrix helpers** -- ``assert_``, ``cols``, ``rows``, ``get_cls``,
+  ``fill_missing_data``.
+  **数据与矩阵辅助函数** -- ``assert_``、``cols``、``rows``、``get_cls``、
+  ``fill_missing_data``。
+* **Series shifting and differencing** -- ``backshift``, ``fwdshift``, ``lag``,
+  ``lag1``, ``tdiff``, ``trimr``.
+  **序列移位与差分** -- ``backshift``、``fwdshift``、``lag``、``lag1``、
+  ``tdiff``、``trimr``。
+* **Trading calendar** -- ``get_tday``, ``is_last_trading_day_of_month``.
+  **交易日历** -- ``get_tday``、``is_last_trading_day_of_month``。
+* **Statistics and printing** -- ``beta_inv``, ``beta_pdf``, ``tdis_inv``,
+  ``smartcov``, ``smartmean``, ``smartmean1``, ``smartstd``, ``smartstd1``,
+  ``smartsum``, ``mprint``.
+  **统计与打印** -- ``beta_inv``、``beta_pdf``、``tdis_inv``、``smartcov``、
+  ``smartmean``、``smartmean1``、``smartstd``、``smartstd1``、``smartsum``、
+  ``mprint``。
+* **Econometric models and unit-root tests** -- ``cadf``, ``CadfResults``,
+  ``ols``, ``OlsResults``, ``rztcrit``.
+  **计量模型与单位根检验** -- ``cadf``、``CadfResults``、``ols``、
+  ``OlsResults``、``rztcrit``。
+* **Reporting and performance** -- ``prt``, ``prt_coint``, ``prt_reg``,
+  ``calculate_maxdd``.
+  **报告与绩效** -- ``prt``、``prt_coint``、``prt_reg``、``calculate_maxdd``。
 """
 
 from .assert_ import assert_
