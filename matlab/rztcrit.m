@@ -19,6 +19,21 @@ function crit = rztcrit(nobs,k,p)
 % References: Said and Dickey (1984) 'Testing for Unit Roots in
 % Autoregressive Moving Average Models of Unknown Order', 
 % Biometrika, Volume 71, pp. 599-607.
+% 用途: 返回 cadf() 中 Zt 统计量的临界值
+% 用法: crit = rztcrit(nobs,p);
+% 其中: nobs = 观测值个数
+% k = cadf() 中 x 矩阵的变量个数
+% p = 零假设中时间多项式的阶数
+% p = -1, 无确定性部分
+% p = 0, 用于常数项
+% p = 1, 用于常数项加时间趋势
+% p > 1, 用于更高阶多项式
+% 注意: 仅适用于 p < 5
+% 使用 10000 次迭代计算得到。
+% 返回: crit = 临界值向量 (6 x 1)
+% [1% 5% 10% 90% 95% 99%] 分位数
+% 参考文献: Said and Dickey (1984)《Testing for Unit Roots in Autoregressive Moving Average Models of Unknown Order》
+% Biometrika, 第 71 卷, 第 599-607 页.
 
 % written by:
 % James P. LeSage, Dept of Economics
@@ -26,6 +41,7 @@ function crit = rztcrit(nobs,k,p)
 % 2801 W. Bancroft St,
 % Toledo, OH 43606
 % jlesage@spatia-econometrics.com
+% 编写者:
 
 
 

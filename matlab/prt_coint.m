@@ -22,6 +22,22 @@ function prt_coint(result,vnames,fid)
 % --------------------------------------------------    
 % SEE ALSO: prt
 %---------------------------------------------------   
+% 用途：打印协整检验的输出结果
+% 检验方法：adf,cadf,johansen,phillips
+% 用法：prt_coint(results,vnames,fid,eflag)
+% 其中：results = 协整检验返回的结构体
+% vnames  = 可选的变量名向量
+% fid     = 将结果打印到文件所使用的文件标识
+% （默认打印到 MATLAB 命令窗口）
+% 例如 vnames = ['y    ',
+% 'x1   ',  注意：固定宽度
+% 'x2   ',        与所有 MATLAB 相同
+% 'cterm'];（变量名列表到此结束）
+% 例如 fid = fopen('coint.out','wr');
+% 返回：
+% 无返回值，仅打印协整检验的结果
+% 注意：可以使用 prt_coint(results,[],fid) 把输出打印到文件中，而不使用 vnames
+% 参见：prt
 
 % written by:
 % James P. LeSage, Dept of Economics
@@ -29,14 +45,24 @@ function prt_coint(result,vnames,fid)
 % 2801 W. Bancroft St,
 % Toledo, OH 43606
 % jlesage@spatial-econometrics.com
+% 编写者：
+% James P. LeSage（经济学系）
+% 托莱多大学
+% 地址：2801 W. Bancroft St,
+% 托莱多，OH 43606
 
 % revised 10/10/2000
 % to fix error in mprint fid
 % Thanks to JChapman@bank-banque-canada.ca
 % for pointing out this error
+% 修订于 10/10/2000
+% 修正 mprint fid 中的错误
+% 感谢 JChapman@bank-banque-canada.ca
+% 指出该错误
 
  
 % if nargin < 1; error('wrong # of arguments to prt_coint'); end;
+% 检查参数个数：if nargin < 1; error('wrong # of arguments to prt_coint'); end;
 if nargin > 3; error('wrong # of arguments to prt_coint'); end;
 
 nflag = 0;
@@ -44,6 +70,7 @@ if nargin == 1; fid = 1;            end;
 if nargin == 2; nflag = 1; fid = 1; end;
 if nargin == 3; 
 [vsize junk] = size(vnames); % user may supply a blank argument
+% 用户可以传入一个空参数
    if vsize > 0
    nflag = 1;          
    end;
@@ -55,13 +82,16 @@ end;
 switch result.meth
  
 case {'johansen'} % <=================== johansen tests
+% <=================== johansen 检验
  
  
 [nvar junk] = size(result.eig);
 
 %  make some up variable names
+% 自行构造变量名
 Vname = [];
 % recover variable order index
+% 恢复变量顺序索引
 index = result.ind;
 
 for i=1:nvar
@@ -69,6 +99,7 @@ for i=1:nvar
 end;
 
 if (nflag == 1) % the user supplied variable names
+% 用户提供了变量名
 [tst_n nsize] = size(vnames);
  if tst_n ~= nvar
  fprintf(fid,'Wrong # of variable names in prt_coint -- check vnames argument \n');
@@ -76,13 +107,16 @@ if (nflag == 1) % the user supplied variable names
  nflag = 0;
  else,
 % recover variable order index
+% 恢复变量顺序索引
 index = result.ind;   
 Vname = [];
  for i=1:nvar
     Vname = strvcat(Vname,vnames(index(i),:));
  end;
  end; % end of if-else
+ % if-else 结束
 end; % end of nflag issue
+% nflag 处理结束
 
 
 rname = 'NULL:';
@@ -108,10 +142,13 @@ mprint(prtmat,in);
 
 
 % end of Johansen
+% Johansen 部分结束
   
 case {'adf'} % <=================== adf tests
+% <=================== adf 检验
 
 if ( nflag == 0) %  no variable names supplied, make some up
+% 未提供变量名，自行构造
 Vname = [];
 
 for i=1:1
@@ -119,17 +156,20 @@ for i=1:1
 end;
 
 elseif (nflag == 1) % the user supplied variable names
+% 用户提供了变量名
 Vname = [];
 
 [tst_n nsize] = size(vnames);
 
 nmax = min(nsize,16); % truncate vnames to 16-characters
+% 将 vnames 截断为 16 个字符
 
 for i=1:1
 Vname{i} = vnames(i,1:nmax);
 end;
 
 end; % end of nflag issue
+% nflag 处理结束
  
 
   fprintf(fid,'\nAugmented DF test for unit root variable: %30s \n',Vname{1});
@@ -149,6 +189,7 @@ case {'cadf'}
 
 
 if ( nflag == 0) %  no variable names supplied, make some up
+% 未提供变量名，自行构造
 Vname = [];
 
 for i=1:2
@@ -156,6 +197,7 @@ for i=1:2
 end;
 
 elseif (nflag == 1) % the user supplied variable names
+% 用户提供了变量名
 Vname = [];
 
 [tst_n nsize] = size(vnames);
@@ -165,12 +207,14 @@ error('Wrong # of variable names in prt_coint -- check vnames argument');
 end;
 
 nmax = min(nsize,16); % truncate vnames to 16-characters
+% 将 vnames 截断为 16 个字符
 
 for i=1:2
 Vname{i} = vnames(i,1:nmax);
 end;
 
 end; % end of nflag issue
+% nflag 处理结束
  
   fprintf(fid,'\n Augmented DF test for co-integration');
       fprintf(fid,' variables: %30s  \n',strjust([Vname{1},',',Vname{2}]));
@@ -186,11 +230,13 @@ end; % end of nflag issue
   mprint(result.crit(1:3)',in2);
       
   % end of cadf  
+  % cadf 部分结束
 
 case {'phillips'}
 
 
 if ( nflag == 0) %  no variable names supplied, make some up
+% 未提供变量名，自行构造
 Vname = [];
 
 for i=1:2
@@ -198,6 +244,7 @@ for i=1:2
 end;
 
 elseif (nflag == 1) % the user supplied variable names
+% 用户提供了变量名
 Vname = [];
 
 [tst_n nsize] = size(vnames);
@@ -207,12 +254,14 @@ error('Wrong # of variable names in prt_coint -- check vnames argument');
 end;
 
 nmax = min(nsize,16); % truncate vnames to 16-characters
+% 将 vnames 截断为 16 个字符
 
 for i=1:2
 Vname{i} = vnames(i,1:nmax);
 end;
 
 end; % end of nflag issue
+% nflag 处理结束
  
   fprintf(fid,'\n Phillips-Peron test for co-integration');
       fprintf(fid,' variables: %30s  \n',strjust([Vname{1},',',Vname{2}]));
@@ -228,6 +277,7 @@ end; % end of nflag issue
       mprint(result.crit(1:3)',in2);
       
   % end of phillips  
+  % phillips 部分结束
     
   
    otherwise

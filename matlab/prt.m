@@ -23,6 +23,23 @@ function prt(results,vnames,fid)
 % --------------------------------------------------
 % SEE ALSO: plt()
 %---------------------------------------------------   
+% 用途: 打印大多数函数返回的结果结构
+% 通过调用相应的打印函数实现
+% 用法: prt(results,vnames,fid)
+% 其中: results = 计量经济学函数返回的结果结构
+% vnames = 可选的变量名向量
+% fid = 用于将结果打印到文件的文件标识符
+% (默认为 MATLAB 命令窗口)
+% 例如 vnames = ['y    ',
+% 'x1   ',  注意: 固定宽度
+% 'x2   ',        与所有 MATLAB
+% 'cterm'];       字符串相同
+% 例如 fid = fopen('ols.out','wr');
+% 注意: 可以使用 prt(results,[],fid) 将输出打印到文件, 不带 vnames
+% 本函数只是一个调用其他函数的包装函数
+% 返回:
+% 无返回值, 仅打印回归结果
+% 参见: plt()
 
 % written by:
 % James P. LeSage, Dept of Economics
@@ -30,13 +47,16 @@ function prt(results,vnames,fid)
 % 2801 W. Bancroft St,
 % Toledo, OH 43606
 % jlesage@spatial-econometrics.com
+% 编写者:
 
 % error checking on inputs
+% 对输入进行错误检查
 if ~isstruct(results)
 error('prt: requires a structure input');
 elseif nargin == 3
 arg = 0;
  [vsize junk] = size(vnames); % user may supply a blank argument
+ % 用户可以传入一个空参数
    if vsize > 0
    arg = 3;          
    end;
@@ -51,11 +71,13 @@ end;
 method = results(1).meth;
 
 % call appropriate printing routine
+% 调用相应的打印例程
 switch method
 
 case {'arma','boxcox','boxcox2','hwhite','lad','logit','mlogit','nwest','ols','olsc',...
       'olsar1','olst','probit','ridge','robust','theil','tobit','tsls'} 
      % call prt_reg
+     % 调用 prt_reg
      if arg == 1
      prt_reg(results);
      elseif arg == 2
@@ -68,6 +90,7 @@ case {'arma','boxcox','boxcox2','hwhite','lad','logit','mlogit','nwest','ols','o
 
 case {'switch_em','hmarkov_em'}
      % call prt_swm
+     % 调用 prt_swm
      if arg == 1
      prt_swm(results);
      elseif arg == 2
@@ -79,7 +102,9 @@ case {'switch_em','hmarkov_em'}
      end;
 
 case {'psem','semsfe','semtfe','semstfe'} % <=================== spatial panel error models
+% <=================== 空间面板误差模型
      % call prt_sp
+     % 调用 prt_sp
      if arg == 1
      prt_sp(results);
      elseif arg == 2
@@ -91,7 +116,9 @@ case {'psem','semsfe','semtfe','semstfe'} % <=================== spatial panel e
      end;
 
 case {'psem','semsfe','semtfe','semstfe','psar','sarsfe','sartfe','sarstfe','sarsre','semsre'} % <=================== spatial panel autoregressive models
+% <=================== 空间面板自回归模型
      % call prt_spnew
+     % 调用 prt_spnew
      if arg == 1
      prt_spnew(results);
      elseif arg == 2
@@ -104,6 +131,7 @@ case {'psem','semsfe','semtfe','semstfe','psar','sarsfe','sartfe','sarstfe','sar
 
 case {'thsls','sur'} 
      % call prt_eqs
+     % 调用 prt_eqs
      if arg == 1
      prt_eqs(results);
      elseif arg == 2
@@ -116,6 +144,7 @@ case {'thsls','sur'}
 
 case {'sem_gmm','sem2_gmm','sac_gmm','sar_gmm'} 
      % call prt_gmm
+     % 调用 prt_gmm
      if arg == 1
      prt_gmm(results);
      elseif arg == 2
@@ -129,6 +158,7 @@ case {'sem_gmm','sem2_gmm','sac_gmm','sar_gmm'}
 
 case {'ar','vare','bvar','rvar','ecm','becm','recm'} 
      % call prt_var
+     % 调用 prt_var
      if arg == 1
      prt_var(results);
      elseif arg == 2
@@ -141,6 +171,7 @@ case {'ar','vare','bvar','rvar','ecm','becm','recm'}
 
 case {'bvar_g','rvar_g','becm_g','recm_g'} 
      % call prt_varg
+     % 调用 prt_varg
      if arg == 1
      prt_varg(results);
      elseif arg == 2
@@ -153,6 +184,7 @@ case {'bvar_g','rvar_g','becm_g','recm_g'}
 
 case {'johansen','adf','cadf','phillips'}
      % call prt_coint
+     % 调用 prt_coint
      if arg == 1
      prt_coint(results);
      elseif arg == 2
@@ -165,6 +197,7 @@ case {'johansen','adf','cadf','phillips'}
 
 case {'coda','raftery','apm','momentg'}
      % call prt_coda
+     % 调用 prt_coda
      if arg == 1
      prt_coda(results);
      elseif arg == 2
@@ -177,6 +210,7 @@ case {'coda','raftery','apm','momentg'}
      
 case {'ar_g','ols_g', 'ols_gc', 'bma_g', 'tobit_g','probit_g','probit_gm'}
      % call prt_gibbs
+     % 调用 prt_gibbs
      if arg == 1
      prt_gibbs(results);
      elseif arg == 2
@@ -189,6 +223,7 @@ case {'ar_g','ols_g', 'ols_gc', 'bma_g', 'tobit_g','probit_g','probit_gm'}
 
 case {'sar','sar_g','sart_g','sarp_g','sar_c','sar_gv','sarp_gc','sar_gbma'}
      % call prt_sar
+     % 调用 prt_sar
      if arg == 1
      prt_sar(results);
      elseif arg == 2
@@ -201,6 +236,7 @@ case {'sar','sar_g','sart_g','sarp_g','sar_c','sar_gv','sarp_gc','sar_gbma'}
 
 case {'sem','sem_g','semt_g','semp_g'}
      % call prt_sem
+     % 调用 prt_sem
      if arg == 1
      prt_sem(results);
      elseif arg == 2
@@ -213,6 +249,7 @@ case {'sem','sem_g','semt_g','semp_g'}
 
 case {'semip_g','semip_gc','semit_g'}
      % call prt_semip
+     % 调用 prt_semip
      if arg == 1
      prt_sem(results);
      elseif arg == 2
@@ -225,6 +262,7 @@ case {'semip_g','semip_gc','semit_g'}
 
 case {'sdm','sdm_g','sdmp_g','sdmt_g','sdm_gmm'}
      % call prt_sdm
+     % 调用 prt_sdm
      if arg == 1
      prt_sdm(results);
      elseif arg == 2
@@ -237,6 +275,7 @@ case {'sdm','sdm_g','sdmp_g','sdmt_g','sdm_gmm'}
 
 case {'far','far_g','far_gc'}
       % call prt_far
+      % 调用 prt_far
      if arg == 1
      prt_far(results);
      elseif arg == 2
@@ -249,6 +288,7 @@ case {'far','far_g','far_gc'}
     
 case{'sac','sac_g','sacp_g','sact_g'}
       % call prt_sac
+      % 调用 prt_sac
      if arg == 1
      prt_sac(results);
      elseif arg == 2
@@ -261,6 +301,7 @@ case{'sac','sac_g','sacp_g','sact_g'}
     
 case{'moran','lmerror','lratios','walds','lmsar'}
      % call prt_spat
+     % 调用 prt_spat
      if arg == 1
      prt_spat(results);
      elseif arg == 2
@@ -275,6 +316,7 @@ case {'mess','mess_g','mess_g1','mess_g2','mess_g3','messv_g3','messt_g', ...
 'messt_g1','messt_g2','messt_g3','messvt_g3','messp_g','messp_g1','messp_g2', ...
 'messp_g3','messpv_g3'}     
      % call prt_mess
+     % 调用 prt_mess
      if arg == 1
      prt_mess(results);
      elseif arg == 2
@@ -287,6 +329,7 @@ case {'mess','mess_g','mess_g1','mess_g2','mess_g3','messv_g3','messt_g', ...
 
 case {'gwr','bgwr','bgwrv','gwr_logit','gwr_probit'}
      % call prt_gwr
+     % 调用 prt_gwr
      if arg == 1
      prt_gwr(results);
      elseif arg == 2
@@ -299,6 +342,7 @@ case {'gwr','bgwr','bgwrv','gwr_logit','gwr_probit'}
 
 case {'casetti','darp','bcasetti'}
      % call prt_cas
+     % 调用 prt_cas
      if arg == 1
      prt_cas(results);
      elseif arg == 2
@@ -311,6 +355,7 @@ case {'casetti','darp','bcasetti'}
 
 case {'tvp','tvp_garch','tvp_markov'}
      % call prt_tvp
+     % 调用 prt_tvp
      if arg == 1
      prt_tvp(results);
      elseif arg == 2
@@ -323,6 +368,7 @@ case {'tvp','tvp_garch','tvp_markov'}
       
 case {'garch'}
      % call prt_garch
+     % 调用 prt_garch
      if arg == 1
      prt_garch(results);
      elseif arg == 2
@@ -335,6 +381,7 @@ case {'garch'}
 
 case {'hamilton','hamilton_g'}
      % call prt_ham
+     % 调用 prt_ham
      if arg == 1
      prt_ham(results);
      elseif arg == 2
@@ -349,6 +396,7 @@ case {'hamilton','hamilton_g'}
 
  case {'felogit'}
      % call prt_felogit
+     % 调用 prt_felogit
      if arg == 1
      prt_felogit(results);
      elseif arg == 2
@@ -362,19 +410,23 @@ case {'hamilton','hamilton_g'}
   case {'multilogit'}
       arg = 1;
       [vsize junk] = size(vnames); % user may supply a blank argument
+      % 用户可以传入一个空参数
       if vsize > 0
       arg = 2;          
       end;
       [vsize junk] = size(cnames); % user may supply a blank argument
+      % 用户可以传入一个空参数
       if vsize > 0
       arg = 3;          
       end;
       [vsize junk] = size(fid); % user may supply a blank argument
+      % 用户可以传入一个空参数
       if vsize > 0
       arg = 4;          
       end;
 
      % call prt_multilogit
+     % 调用 prt_multilogit
      if arg == 1
      prt_multilogit(results);
      elseif arg == 2

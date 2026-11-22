@@ -10,9 +10,17 @@ function x = tdis_inv (p, a)
 % --------------------------------------------------
 % SEE ALSO: tdis_cdf, tdis_rnd, tdis_pdf, tdis_prb
 %---------------------------------------------------
+% 用途: 返回 t(n) 分布在 x 处的反函数（分位数）
+% 用法: x = tdis_inv(p,n)
+% 其中: p = 概率向量
+% n = 标量自由度参数
+% 返回:
+% t(n) 分布在 x 各元素处的 tinv 值向量
+% 参见: tdis_cdf, tdis_rnd, tdis_pdf, tdis_prb
 
 %       Anders Holtsberg, 18-11-93
 %       Copyright (c) Anders Holtsberg
+% 版权所有 (c) Anders Holtsberg
    
 
   if (nargin ~= 2)

@@ -11,11 +11,22 @@ function pdf = beta_pdf(x, a, b)
 %--------------------------------------------------------------
 % SEE ALSO: beta_d, beta_pdf, beta_inv, beta_rnd
 %--------------------------------------------------------------
+% 用途: beta(a,b) 分布的概率密度函数(pdf)
+% 用法: pdf = beta_pdf(x,a,b)
+% 其中:   x = 分量向量
+% a = beta 分布参数, a = 标量
+% b = beta 分布参数  b = 标量
+% 注意: mean[beta(a,b)] = a/(a+b), 方差 = ab/((a+b)*(a+b)*(a+b+1))
+% 返回: beta(a,b) 分布下 x 各元素处的 pdf
+% 参见: beta_d, beta_pdf, beta_inv, beta_rnd
 
 %       Anders Holtsberg, 18-11-93
 %       Copyright (c) Anders Holtsberg
 % documentation modified by LeSage to
 % match the format of the econometrics toolbox
+% 作者: Anders Holtsberg, 18-11-93
+% 版权所有 (c) Anders Holtsberg
+% 文档由 LeSage 修改以匹配计量经济学工具箱的格式
   
 
 if (nargin ~=3)
